@@ -1,5 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_isolates_example/dart_isolates.dart';
+import 'package:flutter_isolates_example/demo_isolates.dart';
 
 void main() => runApp(MyApp());
 
@@ -28,14 +29,7 @@ class MyHomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             DartIsolateWidget(),
-            FlatButton(
-              colorBrightness: Brightness.dark,
-              color: Colors.blue,
-              onPressed: () {},
-              child: Text(
-                'Flutter Isolates',
-              ),
-            ),
+            FlutterIsolateWidget(),
           ],
         ),
       ),
@@ -80,4 +74,21 @@ class _DartIsolateWidgetState extends State<DartIsolateWidget> {
           ],
         ),
       );
+}
+
+class FlutterIsolateWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return FlatButton(
+      colorBrightness: Brightness.dark,
+      color: Colors.blue,
+      onPressed: () async {
+        String result = await compute(flutterIsolateComputation, null);
+        print('RECEIVED: ' + result);
+      },
+      child: Text(
+        'Flutter Isolates',
+      ),
+    );
+  }
 }

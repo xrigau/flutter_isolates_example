@@ -4,7 +4,7 @@ import 'dart:isolate';
 
 Future<StoppableIsolate> spawnIsolate() async {
   ReceivePort receivePort = new ReceivePort();
-  Isolate isolate = await Isolate.spawn(someLongRunningOperation, receivePort.sendPort);
+  Isolate isolate = await Isolate.spawn(dartIsolateLongRunningOperation, receivePort.sendPort);
   receivePort.listen((data) {
     print('RECEIVED: ' + data);
   });
@@ -12,10 +12,10 @@ Future<StoppableIsolate> spawnIsolate() async {
 }
 
 // Isolate code
-void someLongRunningOperation(SendPort sendPort) async {
+void dartIsolateLongRunningOperation(SendPort sendPort) async {
   while (true) {
     sleep(Duration(seconds: 3));
-    sendPort.send('Worked for 3 seconds');
+    sendPort.send('Dart: Worked for 3 seconds');
   }
 }
 
@@ -27,6 +27,12 @@ class StoppableIsolate {
 
   void stop() {
     receivePort.close();
-    isolate.kill();
+    isolate.kill(priority: Isolate.immediate);
   }
+}
+
+// Isolate code
+String flutterIsolateComputation(Null unused) {
+  sleep(Duration(seconds: 3));
+  return 'Flutter: Worked for 3 seconds';
 }
